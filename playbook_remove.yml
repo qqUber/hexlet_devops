@@ -1,0 +1,10 @@
+- name: Remove GIT from transactions
+  hosts: transactions
+  remote_user: qqadmin
+
+  tasks:
+    - name: remove git
+      ansible.builtin.apt:
+        name: git
+        state: absent
+      become: yes  
