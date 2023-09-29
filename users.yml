@@ -1,0 +1,10 @@
+---
+users:
+    - username: arija
+      use_sudo: no
+
+    - username: jeka
+      use_sudo: yes
+   
+    - username: tirion
+      use_sudo: no

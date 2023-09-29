@@ -1,11 +1,20 @@
-- name: Git to transactions
-  hosts: transactions
+- hosts: balancer
   remote_user: qqadmin
+  become: true
+  gather_facts: false
+  vars_files: users.yml
 
   tasks:
     - name: install git
-      ansible.builtin.apt:
+      apt:
         name: git
         state: present
         update_cache: yes
-      become: yes  
+      become: yes
+      tags: [git, default_install]
+
+    - name: Add users | create users, shell, home dirs
+      user: name={{ item.username }} generate_ssh_key=yes ssh_key_bits=2048 ssh_key_file=.ssh/authtorized_keys shell=/bin/bash createhome=yes comment='create with ansible'
+      with_items: 
+        - "{{ users }}"
+      tags: add_users

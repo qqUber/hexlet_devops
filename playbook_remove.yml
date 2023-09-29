@@ -1,5 +1,5 @@
 - name: Remove GIT from transactions
-  hosts: transactions
+  hosts: all
   remote_user: qqadmin
 
   tasks:
