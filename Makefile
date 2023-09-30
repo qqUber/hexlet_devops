@@ -6,4 +6,4 @@ users:
 git_push:
 	git add --all
 	git commit -m '$(commit)'
-	git push origin HEAD
+	git push -f -u origin HEAD
