@@ -1,23 +1,25 @@
 - hosts: balancer
   remote_user: qqadmin
   become: true
+  vars:
+    root_html: /usr/share/nginx/html
+    nginx_port: 8083
 
   tasks:
     - name: install nginx
       apt:
         name: nginx
         state: latest
-      become: yes
       tags: nginx
 
     - name: update nginx index.html
       copy:
         src: files/index.html
-        dest: /usr/share/nginx/html/index.html 
+        dest: "{{root_html}}/index.html" 
       tags: nginx
 
     - name: update nginx config
-      copy:
+      template:
         src: files/nginx.conf
         dest: /etc/nginx/nginx.conf  
       notify:
