@@ -1,0 +1,33 @@
+- hosts: balancer
+  remote_user: qqadmin
+  become: true
+
+  tasks:
+    - name: install nginx
+      apt:
+        name: nginx
+        state: latest
+      become: yes
+      tags: nginx
+
+    - name: update nginx index.html
+      copy:
+        src: files/index.html
+        dest: /usr/share/nginx/html/index.html 
+      tags: nginx
+
+    - name: update nginx config
+      copy:
+        src: files/nginx.conf
+        dest: /etc/nginx/nginx.conf  
+      notify:
+      - restart nginx    
+      tags: nginx
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: reloaded
+      become: yes
+      tags: nginx
