@@ -1,10 +1,7 @@
 ---
 users:
-    - username: arija
-      use_sudo: no
+    - username: jaime
 
-    - username: jeka
-      use_sudo: yes
+    - username: sansa
    
-    - username: tirion
-      use_sudo: no
+    - username: robert

@@ -2,7 +2,11 @@
   remote_user: qqadmin
   become: true
   gather_facts: false
-  vars_files: users.yml
+  vars: 
+    users:
+      - jaime
+      - sansa
+      - robert 
 
   tasks:
     - name: install git
@@ -14,7 +18,28 @@
       tags: [git, default_install]
 
     - name: Add users | create users, shell, home dirs
-      user: name={{ item.username }} generate_ssh_key=yes ssh_key_bits=2048 ssh_key_file=.ssh/authtorized_keys shell=/bin/bash createhome=yes comment='create with ansible'
-      with_items: 
-        - "{{ users }}"
+      user: name={{ item }} shell=/bin/bash createhome=yes comment='create with ansible'
+      loop: "{{ users | flatten(1) }}"
       tags: add_users
+
+    - name: Setup | authorized key upload
+      authorized_key: user={{ item }} key={{ lookup('file', 'files/pub_keys/{{ item }}.pub') }}
+      loop: "{{ users | flatten(1) }}"
+
+    - name: update git config
+      template: 
+        src: files/.gitconfig
+        dest: /home/{{ item }}/.gitconfig
+      loop: "{{ users | flatten(1) }}"
+      become: yes
+      notify:
+        - restart sshd
+      tags: add_users
+    
+  handlers:
+    - name: restart sshd
+      service:
+        name: sshd
+        state: reloaded
+      become: yes
+      tags: sshd
