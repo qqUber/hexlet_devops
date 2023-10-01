@@ -1,0 +1,49 @@
+- hosts: all
+  remote_user: qqadmin
+  become: true
+  vars:
+    users:
+      - robert
+      - sansa
+
+  tasks:
+    - name: install git CentOS
+      yum:
+        name: git
+        state: present
+        update_cache: yes
+      become: yes
+      tags: [git, default_install]
+      when: ansible_distribution == 'CentOS'
+
+    - name: install git Ubuntu
+      apt:
+        name: git
+        state: present
+        update_cache: yes
+      become: yes
+      tags: [git, default_install]
+      when: ansible_distribution == 'Ubuntu'
+    
+    - name: Add users | create users, shell, home dirs
+      user: name={{ item }} shell=/bin/bash createhome=yes comment='create with ansible'
+      loop: "{{ users | flatten(1) }}"
+      tags: add_users
+
+    - name: update git config
+      template: 
+        src: files/.gitconfig
+        dest: /home/{{ item }}/.gitconfig
+      loop: "{{ users | flatten(1) }}"
+      become: yes
+      notify:
+        - restart sshd
+      tags: add_users
+
+  handlers:
+    - name: restart sshd
+      service:
+        name: sshd
+        state: reloaded
+      become: yes
+      tags: sshd
