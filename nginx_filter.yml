@@ -4,6 +4,8 @@
   vars:
     root_html: /usr/share/nginx/html
     nginx_port: 8080
+    web1: "{{'This is server ' + ansible_hostname + '!'}}"
+    timestamp: "{{ ansible_date_time.iso8601 }}"  
 
   tasks:
     - name: install nginx
@@ -15,7 +17,7 @@
 
     - name: update nginx index.html
       template:
-        src: files/index.html
+        src: files/new_index.html
         dest: "{{root_html}}/index.html"
       become: yes 
       tags: nginx
