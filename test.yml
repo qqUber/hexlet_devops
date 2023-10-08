@@ -1,16 +1,18 @@
 
 - hosts: all
   vars:
-   path: /var/log/upstart/nginx.log
-   web1: "{{ansible_hostname}}"
-   web2: "{{'This is server ' + ansible_hostname + '!'}}"
-  
+    #path: /var/log/upstart/nginx.log
+    #web1: "{{ansible_hostname}}"
+    #web2: "{{'This is server ' + ansible_hostname + '!'}}"
+    numbers: [3, 2, 6, 9, 0]
+
   tasks:
-   - ansible.builtin.debug: msg={{ '192.0.2.1/24' | ipaddr('address') }}
-   - ansible.builtin.debug: msg={{ 'test1' | hash('sha1') }}
-   - ansible.builtin.debug: msg={{ path | basename }}
-   - ansible.builtin.debug: msg={{ path | dirname }}
-   - ansible.builtin.debug: msg={{ "~/Movies" | expanduser }}
-   - debug: 
-       msg: "{{ web2|upper }}"
-         ### msg: "This is server {{ web1 }} !"
+   - name: get max number
+     debug: msg={{ numbers|sort }}
+  
+   - name: get unique values
+     debug: msg={{ item }}
+     loop: "{{ numbers }}"
+   
+   - name: get random value
+     debug: msg={{ ['a', 'b', 'c'] | random }}

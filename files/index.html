@@ -8,6 +8,7 @@
 	</head>
 		<body>
 		  <h1>Hello World!</h1>
-		  <h2>This is server {{ web1  }} !</h2>
+		  <h2>{{ web1|upper }}</h2>
+		  <pre><code>{{ cowsay_result.stdout_lines| join('\n') }}</code></pre>
 		</body>
 </html>
