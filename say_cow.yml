@@ -1,0 +1,6 @@
+    - name: say cow
+      command: cowsay 'This is server' + "{{ansible_lsb.description}}"
+      register: cowsay_result
+      become: true
+      become_user: qqadmin
+      ignore_errors: yes

@@ -18,12 +18,9 @@
         name: cowsay
         state: latest
       become: yes
-    
-    - name: say cow
-      command: cowsay 'This is server' + "{{ansible_lsb.description}}"
-      register: cowsay_result
-      become_user: qqadmin
-      ignore_errors: yes
+
+    - name: Say cow play
+      include_tasks: say_cow.yml
 
     - name: update nginx index.html
       template:
